@@ -1,0 +1,99 @@
+\documentclass[a4paper, 12pt]{article}
+
+\usepackage{cite}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{fullpage}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{inputenc}
+\usepackage{titling}
+\usepackage{hyperref}
+\usepackage{mdframed}
+\usepackage[normalem]{ulem}
+
+\newtheorem{theorem}{Theorem}
+
+\date{\today}
+\title{Queueing Theory Reading Notes} 
+
+\author{Brendan Duke}
+
+\begin{document}
+
+\maketitle
+
+\section{Definitions}
+
+\section{Paper Summaries}
+
+\subsection{Performance Modeling and Design of Computer Systems: Queueing
+            Theory in Action\cite{Harchol-Balter:2013:PMD:2462638}}
+
+\subsubsection{Chapter 17 Networks of Queues and Jackson Product Form}
+
+A \textbf{Jackson Network} is a network with probabilistic routing where jobs
+are served in FCFS order, and service times are exponentially distributed.
+Arrivals, from inside and outside the network, are from Poisson processes.
+
+\begin{equation}
+        \textbf{P}\{\text{state is }(n_1,\dots,n_k)\} =
+                \prod_{i = 1}^k \textbf{P} \{n_i \,\text{jobs at server}\, i\} =
+                \prod_{i = 1}^k \rho_{i}^{n_i} (1 - \rho_i)
+\end{equation}
+
+\subsubsection{Chapter 18 Closed Networks of Queues}
+
+\begin{mdframed}
+\uline{\textbf{\textit{Solving Closed Batch Jackson Networks}}}
+\begin{enumerate}
+        \item Determine $\lambda_i$'s by solving rate equations and picking a
+                value for $\lambda_1$, e.g. $\lambda_1 = 1$.
+        \item Compute $\rho_i = \frac{\lambda_i}{\mu_i}$ for all $i$.
+        \item Set $\pi_{n_1, \dots , n_k} = C'\rho_1^{n_1} \dots \rho_k^{n_k}$
+        \item Use $\sum\limits_{
+                        \substack{n_1, \dots, n_k \\ \text{s.t.} \sum_i n_i = N}}
+                   \pi_{n_1, \dots , n_k} = 1$ to solve for $C'$.
+\end{enumerate}
+\end{mdframed}
+
+\textbf{Mean Values Analysis (MVA)} is a method for recursively computing the
+expected number of jobs at a server in a closed network with a total number of
+jobs $M$, namely $\textbf{E}\big[N_j^{(M)}\big]$.
+
+\begin{theorem}
+        An arriving job to a server $j$ in a closed Jackson network with
+        $M > 1$ total jobs witnesses a job distribution at each server
+        equivalent to that server's steady-state job distribution in the same
+        network with $M - 1$ total jobs. In particular, the mean number of jobs
+        that the arrival sees at server $j$ is
+        $\textbf{E}\Big[N_j^{(M - 1)}\Big]$.
+\end{theorem}
+
+We would like to use the convenient variable $p_j$, which is independent of $M$, defined as,
+
+\begin{equation}
+        p_j = \frac{\lambda_j^{(M)}}{\lambda^{(M)}} =
+                \frac{X^{(M)} V_j}{\sum_{j = 1}^{k} X^{(M)} V_j} =
+                \frac{V_j}{\sum_{j = 1}^{k} V_j}.
+\end{equation}
+
+We use $p_j$ in the following recursive definition of $\textbf{E}\Big[T_j^{(M)}\Big]$,
+
+\begin{equation}
+        \textbf{E}\Big[T_j^{(M)}\Big] =
+                \frac{1}{\mu_j} + \frac{p_j\cdot \lambda^{(M - 1)} \textbf{E}\Big[T_j^{(M - 1)}\Big]}{\mu_j}.
+\end{equation}
+
+In the above equation, we can use the fact that
+$\sum_{j = 1}^{k} \textbf{E} \Big[ N_j^{(M - 1)} \Big] = M - 1$ and apply
+Little's Law to find $\lambda^{(M - 1)}$ as below,
+
+\begin{equation}
+        \lambda^{(M - 1)} = \frac{M - 1}{\sum_{j = 1}^k p_j \textbf{E} \Big[ T_j^{(M - 1)} \Big]}.
+\end{equation}
+
+\bibliographystyle{IEEEtran}
+\bibliography{IEEEabrv,queueing-notes}
+
+\end{document}
